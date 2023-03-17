@@ -9,6 +9,12 @@ const tutorialSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+tutorialSchema.method("toJSON", function() {
+  const { __v, _id, ...object } = this.toObject();
+  object.id = _id;
+  return object;
+});
+
 const tutorial = mongoose.model("tutorial", tutorialSchema);
 
 export default tutorial;
