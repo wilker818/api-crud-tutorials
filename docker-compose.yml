@@ -1,0 +1,46 @@
+version: "3"
+
+services:
+
+  mongo:
+    image: mongo
+    restart: always
+    networks:
+      - internal-network
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 9090:8081
+    networks:
+      - internal-network
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+
+  node-api:
+    build: .
+    image: wilker/node-api
+    container_name: node-api
+    environment:
+      PORT: 5000
+      CONNECT_MONGO_URL: 'mongodb://root:example@mongo:27017/'
+    ports:
+      - "5000:5000"
+    networks:
+      - internal-network
+    depends_on:
+      - "mongo"
+
+networks:
+  internal-network:
+    driver: bridge
+
+volumes:
+  mongo_db:
+    driver: local

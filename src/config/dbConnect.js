@@ -1,6 +1,7 @@
+import envs from "./envs.js"
 import mongoose from "mongoose";
 
-mongoose.connect(process.env.CONNECT_MONGO_URL);
+mongoose.connect(envs.db_url);
 
 let db = mongoose.connection;
 
